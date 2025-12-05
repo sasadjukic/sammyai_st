@@ -39,6 +39,19 @@ def initialize_session_state():
             }
         ]
 
+def reset_chat():
+    """Reset the chat to initial state"""
+    st.session_state.messages = [
+        {
+            'role': 'system',
+            'content': SYSTEM_PROMPT
+        },
+        {
+            'role': 'assistant',
+            'content': "Hi, I'm Sammy, your creative writing assistant. What great story are we going to write today?"
+        }
+    ]
+
 def display_chat_history():
     for message in st.session_state.messages:
         if message["role"] != "system" and message["role"] != "hidden_content":
@@ -78,15 +91,30 @@ def handle_user_input():
         st.session_state.messages.append({"role": "assistant", "content": full_response})
 
 def main():
+    st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
+    initialize_session_state()
+    
+    # Sidebar on the left with branding and controls
+    with st.sidebar:
+        st.markdown("""
+        <div class="sidebar-branding">
+            <h1>SammyAI</h1>
+            <p>SammyAI is a free, open source writing assistant powered by Gemma3:4b</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        if st.button("🔄 Start New Chat", key="reset_button"):
+            reset_chat()
+            st.rerun()
+    
+    # Main chat area (no column wrapper)
+    # Header with logo
     col1, col2 = st.columns([1, 5])
     with col1:
         st.image("Sammy.png", width=100)
     with col2:
         st.title("Sammy - Creative Writing Assistant")
-    st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
-
-    initialize_session_state()
-
+    
     # File uploader
     uploaded_file = st.file_uploader("Upload a .txt or .pdf file", type=["txt", "pdf"])
     if uploaded_file is not None:
@@ -94,7 +122,7 @@ def main():
         if file_content:
             st.session_state.messages.append({"role": "hidden_content", "content": f"Document content:\n{file_content}"})
             st.success("File uploaded successfully! Sammy will consider its content.")
-
+    
     display_chat_history()
     handle_user_input()
 
