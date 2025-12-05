@@ -1,13 +1,55 @@
 import streamlit as st
 import ollama
 import PyPDF2
+import os
 from io import BytesIO
 from PIL import Image
 from system_prompt import SYSTEM_PROMPT
 from styles import CUSTOM_CSS
 from st_copy import copy_button
 
-MODELS = ['gemma3:4b', 'kimi-k2:1t']
+# Load environment variables from .env file
+def load_env_file():
+    """Simple .env file parser"""
+    env_path = os.path.join(os.path.dirname(__file__), '.env')
+    if os.path.exists(env_path):
+        with open(env_path, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#') and '=' in line:
+                    key, value = line.split('=', 1)
+                    # Remove quotes if present
+                    value = value.strip().strip("'\"")
+                    os.environ[key.strip()] = value
+    
+load_env_file()
+
+# Model configuration
+MODEL_MAPPING = {
+    "Gemma3:4b": {"name": "gemma3:4b", "type": "local"},
+    "Kimi K2:1T": {"name": "kimi-k2:1t", "type": "cloud"}
+}
+
+# Load API key from environment
+OLLAMA_API_KEY = os.getenv('ollama_api_key')
+
+def get_ollama_client(model_display_name):
+    """Get appropriate Ollama client based on selected model"""
+    model_config = MODEL_MAPPING.get(model_display_name)
+    
+    if not model_config:
+        # Default to local if model not found
+        return ollama.Client()
+    
+    if model_config["type"] == "cloud":
+        # Use cloud API with authentication
+        return ollama.Client(
+            host='https://ollama.com',
+            headers={'Authorization': f'Bearer {OLLAMA_API_KEY}'}
+        )
+    else:
+        # Use local Ollama
+        return ollama.Client()
 
 def process_uploaded_file(uploaded_file):
     if uploaded_file is not None:
@@ -72,8 +114,17 @@ def handle_user_input():
         # Display assistant response in chat message container
         with st.chat_message("assistant", avatar="Sammy.png"):
             with st.spinner("Sammy is thinking..."):
-                response = ollama.chat(
-                    model=MODEL,
+                # Get the selected model information
+                selected_model_display = st.session_state.selected_model
+                model_config = MODEL_MAPPING.get(selected_model_display)
+                model_name = model_config["name"] if model_config else "gemma3:4b"
+                
+                # Get appropriate client (local or cloud)
+                client = get_ollama_client(selected_model_display)
+                
+                # Generate response using selected model and client
+                response = client.chat(
+                    model=model_name,
                     messages=[
                         {"role": "user" if m["role"] == "hidden_content" else m["role"], "content": m["content"]}
                         for m in st.session_state.messages
