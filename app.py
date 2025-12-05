@@ -7,7 +7,7 @@ from system_prompt import SYSTEM_PROMPT
 from styles import CUSTOM_CSS
 from st_copy import copy_button
 
-MODEL = 'gemma3:4b'
+MODELS = ['gemma3:4b', 'kimi-k2:1t']
 
 def process_uploaded_file(uploaded_file):
     if uploaded_file is not None:
@@ -112,6 +112,9 @@ def main():
             options=["Gemma3:4b", "Kimi K2:1T"],
             index=0 if st.session_state.selected_model == "Gemma3:4b" else 1
         )
+        
+        # Add spacing before button to match spacing after branding
+        st.markdown("<div style='margin-top: 1.5rem;'></div>", unsafe_allow_html=True)
         
         if st.button("Start New Chat", key="reset_button"):
             reset_chat()

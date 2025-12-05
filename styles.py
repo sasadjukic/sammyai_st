@@ -20,6 +20,16 @@ CUSTOM_CSS = """
         background-color: #FFF9F0 !important;
     }
     
+    /* Set chat input container background */
+    section[data-testid="stChatInputContainer"] {
+        background-color: #FFF9F0 !important;
+    }
+    
+    /* Set chat input area background */
+    .stChatInput {
+        background-color: #FFF9F0 !important;
+    }
+    
     /* Target user messages by finding the parent of stChatMessageAvatarUser */
     div[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
         flex-direction: row-reverse !important;
@@ -73,6 +83,13 @@ CUSTOM_CSS = """
         font-size: 0.9rem;
         line-height: 1.5;
         margin-bottom: 0;
+    }
+    
+    
+    /* Align button container with other input elements */
+    section[data-testid="stSidebar"] .stButton {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
     }
     
     /* Stylized button */
