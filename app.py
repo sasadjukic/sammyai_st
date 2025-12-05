@@ -99,11 +99,21 @@ def main():
         st.markdown("""
         <div class="sidebar-branding">
             <h1>SammyAI</h1>
-            <p>SammyAI is a free, open source writing assistant powered by Gemma3:4b</p>
+            <p>SammyAI is a free, open source creative writing assistant. SammyAI helps you create rich characters and worlds from the scratch.</p>
         </div>
         """, unsafe_allow_html=True)
         
-        if st.button("🔄 Start New Chat", key="reset_button"):
+        # LLM selection dropdown
+        if "selected_model" not in st.session_state:
+            st.session_state.selected_model = "Gemma3:4b"
+        
+        st.session_state.selected_model = st.selectbox(
+            "Select LLM Model",
+            options=["Gemma3:4b", "Kimi K2:1T"],
+            index=0 if st.session_state.selected_model == "Gemma3:4b" else 1
+        )
+        
+        if st.button("Start New Chat", key="reset_button"):
             reset_chat()
             st.rerun()
     

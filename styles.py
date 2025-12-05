@@ -5,6 +5,21 @@ CUSTOM_CSS = """
         background-color: #FFF9F0 !important;
     }
     
+    /* Set header background color */
+    header[data-testid="stHeader"] {
+        background-color: #FFF9F0 !important;
+    }
+    
+    /* Set footer background color */
+    footer[data-testid="stFooter"] {
+        background-color: #FFF9F0 !important;
+    }
+    
+    /* Set main content area background */
+    .main {
+        background-color: #FFF9F0 !important;
+    }
+    
     /* Target user messages by finding the parent of stChatMessageAvatarUser */
     div[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
         flex-direction: row-reverse !important;
@@ -38,25 +53,23 @@ CUSTOM_CSS = """
     
     /* Sidebar branding section */
     .sidebar-branding {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: transparent;
         padding: 1.5rem;
-        border-radius: 15px;
+        border-radius: 10px;
         text-align: center;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         margin-bottom: 1.5rem;
         margin-top: 0.5rem;
     }
     
     .sidebar-branding h1 {
-        color: white;
+        color: black;
         font-size: 2rem;
         margin-bottom: 0.75rem;
         font-weight: 700;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     }
     
     .sidebar-branding p {
-        color: rgba(255, 255, 255, 0.95);
+        color: black;
         font-size: 0.9rem;
         line-height: 1.5;
         margin-bottom: 0;
@@ -68,7 +81,7 @@ CUSTOM_CSS = """
         background: white !important;
         color: #667eea !important;
         border: none !important;
-        border-radius: 25px !important;
+        border-radius: 10px !important;
         padding: 0.75rem 1.5rem !important;
         font-size: 1rem !important;
         font-weight: 600 !important;
