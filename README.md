@@ -9,6 +9,7 @@ Sammy is an intelligent AI writing assistant designed to help users outline, dra
 ## Features
 
 - **Multi-genre Expertise:** Sammy is proficient in assisting with different writing forms, from academic essays to complex screenplays.
+- **Dual Model Support:** Choose between local `gemma3:4b` for fast responses or cloud-based `kimi-k2:1t` for more powerful generation.
 - **Collaborative Approach:** The assistant is designed to ask clarifying questions, offer constructive feedback, and present multiple options to align with the user's creative vision.
 - **File Uploads:** Users can upload `.txt` or `.pdf` files, and Sammy will process their content to provide context-aware assistance.
 - **Streamlined UI:** A clean and intuitive chat interface built with Streamlit.
@@ -41,20 +42,30 @@ Before you begin, ensure you have the following installed:
    pip install -r requirements.txt
    ```
 
-4. Ensure `ollama` is running and the `gemma3:4b` model is downloaded:
+4. **For local Gemma3:4b model:** Ensure `ollama` is running and the `gemma3:4b` model is downloaded:
    ```bash
    ollama run gemma3:4b
    ```
 
+5. **For cloud Kimi K2:1T model (optional):** Create a `.env` file in the project root and add your Ollama API key:
+   ```bash
+   echo "ollama_api_key='your_api_key_here'" > .env
+   ```
+   You can obtain an API key from [ollama.com](https://ollama.com).
+
 ### Running the Application
 
-Once the prerequisites are met and `ollama` is running with the specified model, you can start the Streamlit application:
+Once the prerequisites are met, you can start the Streamlit application:
 
 ```bash
 streamlit run app.py
 ```
 
 This will open the Sammy AI Writing Assistant in your web browser.
+
+**Model Selection:** Use the dropdown in the sidebar to switch between:
+- **Gemma3:4b** - Fast, local model (requires local Ollama installation)
+- **Kimi K2:1T** - Powerful cloud model (requires API key in `.env` file)
 
 ## Development Status
 
