@@ -80,6 +80,8 @@ def initialize_session_state():
                 'content': "Hi, I'm Sammy, your creative writing assistant. What great story are we going to write today?"
             }
         ]
+    if "uploaded_file_id" not in st.session_state:
+        st.session_state.uploaded_file_id = None
 
 def reset_chat():
     """Reset the chat to initial state"""
@@ -93,6 +95,7 @@ def reset_chat():
             'content': "Hi, I'm Sammy, your creative writing assistant. What great story are we going to write today?"
         }
     ]
+    st.session_state.uploaded_file_id = None
 
 def display_chat_history():
     for message in st.session_state.messages:
@@ -182,10 +185,20 @@ def main():
     # File uploader
     uploaded_file = st.file_uploader("Upload a .txt or .pdf file", type=["txt", "pdf"])
     if uploaded_file is not None:
-        file_content = process_uploaded_file(uploaded_file)
-        if file_content:
-            st.session_state.messages.append({"role": "hidden_content", "content": f"Document content:\n{file_content}"})
-            st.success("File uploaded successfully! Sammy will consider its content.")
+        # Create a unique identifier for the uploaded file
+        file_id = f"{uploaded_file.name}_{uploaded_file.size}"
+        
+        # Only process if this is a new file
+        if st.session_state.uploaded_file_id != file_id:
+            file_content = process_uploaded_file(uploaded_file)
+            if file_content:
+                st.session_state.messages.append({"role": "hidden_content", "content": f"Document content:\n{file_content}"})
+                st.session_state.uploaded_file_id = file_id
+                st.success(f"File '{uploaded_file.name}' uploaded successfully! Sammy will consider its content.")
+            else:
+                st.error("Failed to process the uploaded file.")
+        else:
+            st.info(f"File '{uploaded_file.name}' is already loaded in the conversation.")
     
     display_chat_history()
     handle_user_input()
